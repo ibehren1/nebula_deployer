@@ -1,0 +1,24 @@
+---
+- name: Download Nebula (Linux)
+  get_url:
+    url: https://github.com/slackhq/nebula/releases/download/v1.3.0/nebula-linux-amd64.tar.gz
+    dest: /tmp/nebula-linux-amd64.tar.gz
+
+- name: Extract Nebula
+  unarchive:
+    src: /tmp/nebula-linux-amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: Remove Nebula Source
+  file:
+    path: /tmp/nebula-linux-amd64.tar.gz
+    state: absent
+
+- name: Create Nebula Config Dir
+  file:
+    path: /etc/nebula
+    state: directory
+    owner: root
+    group: root
+    mode: 0755

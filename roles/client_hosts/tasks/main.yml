@@ -1,0 +1,49 @@
+---
+- include_role:
+    name: nebula_install
+
+- name: Copy config files to Client node(s)
+  copy:
+    src: ../../nebula_files/{{ item.src }}
+    dest: /etc/nebula/{{ item.dest }}
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - { src: "config.yml", dest: "config.yml" }
+    - { src: "ca.crt", dest: "ca.crt" }
+    - {
+        src: "{{ inventory_hostname }}.crt",
+        dest: "{{ inventory_hostname }}.crt",
+      }
+    - {
+        src: "{{ inventory_hostname }}.key",
+        dest: "{{ inventory_hostname }}.key",
+      }
+
+- name: Create links to host crt and key
+  file:
+    src: /etc/nebula/{{ item.src }}
+    dest: /etc/nebula/{{ item.dest }}
+    state: link
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - { src: "{{ inventory_hostname }}.crt", dest: "host.crt" }
+    - { src: "{{ inventory_hostname }}.key", dest: "host.key" }
+
+- name: Copy Systemd service file to Client node(s)
+  copy:
+    src: ../../nebula_files/nebula.service
+    dest: /etc/systemd/system/nebula.service
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Start Nebula service
+  systemd:
+    state: started
+    enabled: yes
+    daemon_reload: yes
+    name: nebula

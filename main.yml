@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: yes
+  roles:
+    # - ansible_facts
+    - { role: lighthouse, when: "'Lighthouse' in group_names" }
+    - { role: client_hosts, when: "'Clients' in group_names" }
+# How to run
+# ansible-playbook -u <user> -b -i hosts --private-key </path/to/ssh.pem> main.yml

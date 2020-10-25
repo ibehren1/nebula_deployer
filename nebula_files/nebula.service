@@ -1,0 +1,11 @@
+[Unit]
+Description=Nebula
+
+[Service]
+User=root
+Group=root
+Restart=on-failure
+ExecStart=/usr/local/bin/nebula -config /etc/nebula/config.yml
+
+[Install]
+WantedBy=multi-user.target
