@@ -1,5 +1,6 @@
 ---
-- include_role:
+- name: Include Nebula Install
+  include_role:
     name: nebula_install
 
 - name: Copy config files to Client node(s)
